@@ -11,32 +11,6 @@ from utils.latest_dates import (
     get_latest_heatmaps_date,
 )
 from utils.raw_data_count import get_guild_raw_data_count
-import streamlit as st
-
-
-def load_guilds_latest_dates(_progress_bar=None) -> list[dict[str, str | datetime]]:
-    client = MongoSingleton.get_instance().client
-
-    cursor = client["Core"]["platforms"].find({"name": "discord"})
-    guild_documents = list(cursor)
-
-    guilds_data: list[dict[str, str | datetime]] = []
-
-    for idx, guild_doc in enumerate(guild_documents):
-        guild_id = guild_doc["metadata"]["id"]
-        message = f"Analyzing {idx + 1}/{len(guild_documents)} guild_id: {guild_id}"
-        if _progress_bar:
-            _progress_bar.progress((idx + 1) / len(guild_documents), text=message)
-        logging.info(message)
-
-        data = process_guild_data(guild_doc)
-        # TODO: bring the neo4j analytics too
-        guilds_data.append(data)
-
-    if _progress_bar:
-        _progress_bar.empty()
-
-    return guilds_data
 
 
 def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
@@ -76,11 +50,3 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
     data["raw_data_count_30days"] = raw_data_count
 
     return data
-
-
-def load_guilds_analytics_pandas(_progress_bar=None) -> pd.DataFrame:
-    guilds_data = load_guilds_latest_dates(_progress_bar)
-    df = pd.DataFrame(guilds_data)
-
-    df = df.sort_values(by="connected_at", ascending=False).reset_index(drop=True)
-    return df
