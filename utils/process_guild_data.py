@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
-from dateutil import parser
-import pandas as pd
-import logging
 
-from utils.mongo import MongoSingleton
 from utils.latest_dates import (
     get_latest_discord_raw_info_date,
     get_latest_memberactivities_date,
     get_latest_fired_saga,
     get_latest_heatmaps_date,
 )
-from utils.raw_data_count import get_guild_raw_data_count
+from utils.collections_data_count import (
+    get_guild_raw_data_count,
+    get_guild_members_count,
+)
 
 
 def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
@@ -38,15 +37,18 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
     fired_sage_date = get_latest_fired_saga(platform_id=platform_id)
     heatmaps_date = get_latest_heatmaps_date(guild_id)
     memberactivities_date = get_latest_memberactivities_date(guild_id)
+
+    guild_members_count = get_guild_members_count(guild_id)
     # 30 days before
     raw_data_count = get_guild_raw_data_count(
         guild_id, from_date=datetime.now() - timedelta(days=31)
     )
 
     data["latest_raw_info"] = raw_infos_date
-    data["latest_fired_saga"] = fired_sage_date
+    data["latest_analyzer_run_fired_saga"] = fired_sage_date
     data["latest_heatmaps"] = heatmaps_date
     data["latest_memberactivities"] = memberactivities_date
     data["raw_data_count_30days"] = raw_data_count
+    data["guild_members_count"] = guild_members_count
 
     return data

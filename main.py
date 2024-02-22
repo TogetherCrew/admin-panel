@@ -10,7 +10,7 @@ import streamlit as st
 import logging
 
 from utils.mongo import MongoSingleton
-from utils.load_guilds_latest_dates import process_guild_data
+from utils.process_guild_data import process_guild_data
 
 
 def load_guilds_latest_date_df() -> list[dict[str, str | datetime]]:
