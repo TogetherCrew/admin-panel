@@ -1,23 +1,15 @@
 from datetime import datetime, timedelta
 
-from utils.latest_dates import (
-    get_latest_discord_raw_info_date,
-    get_latest_memberactivities_date,
-    get_latest_fired_saga,
-    get_latest_heatmaps_date,
-)
-from utils.collections_data_count import (
-    get_guild_raw_data_count,
-    get_guild_members_count,
-)
+from utils.mongo_utils import MongoUtils
 
-from utils.raw_data_channels import get_distinct_channels
 
 def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
     data: dict[str, str | datetime | None] = {}
 
     platform_id = str(platform_document["_id"])
     guild_id = platform_document["metadata"]["id"]
+    utils = MongoUtils(guild_id)
+
     guild_name = platform_document["metadata"]["name"]
     connected_at = platform_document["connectedAt"]
     disconnected_at = platform_document["disconnectedAt"]
@@ -33,16 +25,16 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
     data["disconnected_at"] = disconnected_at
 
     # getting the latest dates
-    raw_infos_date = get_latest_discord_raw_info_date(guild_id)
-    fired_sage_date = get_latest_fired_saga(platform_id=platform_id)
-    heatmaps_date = get_latest_heatmaps_date(guild_id)
-    memberactivities_date = get_latest_memberactivities_date(guild_id)
-    extracted_channels = get_distinct_channels(guild_id)
+    raw_infos_date = utils.get_latest_discord_raw_info_date()
+    fired_sage_date = utils.get_latest_fired_saga(platform_id=platform_id)
+    heatmaps_date = utils.get_latest_heatmaps_date()
+    memberactivities_date = utils.get_latest_memberactivities_date()
+    extracted_channels = utils.get_distinct_channels()
 
-    guild_members_count = get_guild_members_count(guild_id)
+    guild_members_count = utils.get_guild_members_count()
     # 30 days before
-    raw_data_count = get_guild_raw_data_count(
-        guild_id, from_date=datetime.now() - timedelta(days=31)
+    raw_data_count = utils.get_guild_raw_data_count(
+        from_date=datetime.now() - timedelta(days=31)
     )
 
     data["selected_channels_count"] = selected_channel_count
