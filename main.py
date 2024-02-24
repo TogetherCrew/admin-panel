@@ -13,6 +13,7 @@ from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
 
 
+@st.cache_data
 def load_guilds_latest_date_df() -> list[dict[str, str | datetime]]:
     client = MongoSingleton.get_instance().client
 
@@ -112,5 +113,5 @@ logging.basicConfig(level=logging.INFO)
 
 st.subheader("MongoDB data Analytics")
 df = load_guilds_latest_date_df()
-df = process_df(df)
-st.dataframe(df, use_container_width=True, hide_index=True)
+# df = process_df(df)
+# st.dataframe(df, use_container_width=True, hide_index=True)

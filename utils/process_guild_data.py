@@ -11,6 +11,7 @@ from utils.collections_data_count import (
     get_guild_members_count,
 )
 
+from utils.raw_data_channels import get_distinct_channels
 
 def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
     data: dict[str, str | datetime | None] = {}
@@ -29,7 +30,6 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
     data["guild_name"] = guild_name
     data["connected_at"] = connected_at
     data["platform_id"] = platform_id
-    data["selected_channels_count"] = selected_channel_count
     data["disconnected_at"] = disconnected_at
 
     # getting the latest dates
@@ -37,6 +37,7 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
     fired_sage_date = get_latest_fired_saga(platform_id=platform_id)
     heatmaps_date = get_latest_heatmaps_date(guild_id)
     memberactivities_date = get_latest_memberactivities_date(guild_id)
+    extracted_channels = get_distinct_channels(guild_id)
 
     guild_members_count = get_guild_members_count(guild_id)
     # 30 days before
@@ -44,6 +45,8 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
         guild_id, from_date=datetime.now() - timedelta(days=31)
     )
 
+    data["selected_channels_count"] = selected_channel_count
+    data["extracted_channel_counts"] = len(extracted_channels)
     data["latest_raw_info"] = raw_infos_date
     data["latest_analyzer_run_fired_saga"] = fired_sage_date
     data["latest_heatmaps"] = heatmaps_date
