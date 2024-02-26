@@ -4,3 +4,5 @@ pandas
 matplotlib
 python-dotenv
 pymongo
+pytest
+coverage
