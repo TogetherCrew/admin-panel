@@ -24,7 +24,6 @@ class MongoBase:
     def get_latest_document(
         self, db_name: str, collection_name: str, date_field: str, **kwargs
     ) -> dict[str, Any]:
-
         filters = kwargs.get("filters", None)
         client = MongoSingleton.get_instance().client
         if filters is None:

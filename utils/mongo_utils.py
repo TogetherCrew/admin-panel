@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from utils.mongo_base import MongoBase
 
 
@@ -6,7 +7,7 @@ class MongoUtils(MongoBase):
     def __init__(self, guild_id: str) -> None:
         super().__init__(guild_id)
 
-    def get_latest_discord_raw_info_date(self) -> datetime:
+    def get_latest_discord_raw_info_date(self) -> datetime | None:
         date_field = "createdDate"
         latest_document = self.get_latest_document(
             db_name=self.guild_id, collection_name="rawinfos", date_field=date_field
@@ -20,18 +21,18 @@ class MongoUtils(MongoBase):
             collection_name="memberactivities",
             date_field=date_field,
         )
-        return self.get_latest_date(latest_document, date_field)
+        return self.get_latest_date(latest_document, date_field)  # type: ignore
 
     def get_latest_heatmaps_date(self) -> str:
         date_field = "date"
         latest_document = self.get_latest_document(
             db_name=self.guild_id, collection_name="heatmaps", date_field=date_field
         )
-        return self.get_latest_date(latest_document, date_field)
+        return self.get_latest_date(latest_document, date_field)  # type: ignore
 
     def get_latest_fired_saga(
         self, guild_id: str | None = None, platform_id: str | None = None
-    ) -> datetime:
+    ) -> datetime | None:
         date_field = "createdAt"
         if platform_id:
             latest_document = self.get_latest_document(
