@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 from utils.mongo_utils import MongoUtils
 
 
-def process_guild_data(platform_document: dict) -> dict[str, str | int | datetime | None]:
+def process_guild_data(
+    platform_document: dict,
+) -> dict[str, str | int | datetime | None]:
     """
     process each platform and prepare the analytics for it
     """
