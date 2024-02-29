@@ -43,7 +43,7 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
         "latest_heatmaps": heatmaps_date,
         "latest_memberactivities": memberactivities_date,
         "raw_data_count_30days": raw_data_count,
-        "guild_members_count": guild_members_count
+        "guild_members_count": guild_members_count,
     }
 
     return data
