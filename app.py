@@ -3,7 +3,6 @@ from datetime import datetime
 
 import pandas as pd
 import streamlit as st
-
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
 

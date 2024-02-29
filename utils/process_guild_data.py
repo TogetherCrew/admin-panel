@@ -4,7 +4,6 @@ from utils.mongo_utils import MongoUtils
 
 
 def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
-    data: dict[str, str | datetime | None] = {}
 
     platform_id = str(platform_document["_id"])
     guild_id = platform_document["metadata"]["id"]
@@ -17,12 +16,6 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
         selected_channel_count = len(platform_document["metadata"]["selectedChannels"])
     else:
         selected_channel_count = -1
-
-    data["guild_id"] = guild_id
-    data["guild_name"] = guild_name
-    data["connected_at"] = connected_at
-    data["platform_id"] = platform_id
-    data["disconnected_at"] = disconnected_at
 
     # getting the latest dates
     raw_infos_date = utils.get_latest_discord_raw_info_date()
@@ -37,13 +30,20 @@ def process_guild_data(platform_document: dict) -> dict[str, str | datetime | No
         from_date=datetime.now() - timedelta(days=31)
     )
 
-    data["selected_channels_count"] = selected_channel_count
-    data["extracted_channel_counts"] = len(extracted_channels)
-    data["latest_raw_info"] = raw_infos_date
-    data["latest_analyzer_run_fired_saga"] = fired_sage_date
-    data["latest_heatmaps"] = heatmaps_date
-    data["latest_memberactivities"] = memberactivities_date
-    data["raw_data_count_30days"] = raw_data_count
-    data["guild_members_count"] = guild_members_count
+    data: dict[str, str | int | datetime | None] = {
+        "guild_id": guild_id,
+        "guild_name": guild_name,
+        "connected_at": connected_at,
+        "platform_id": platform_id,
+        "disconnected_at": disconnected_at,
+        "selected_channels_count": selected_channel_count,
+        "extracted_channel_counts": len(extracted_channels),
+        "latest_raw_info": raw_infos_date,
+        "latest_analyzer_run_fired_saga": fired_sage_date,
+        "latest_heatmaps": heatmaps_date,
+        "latest_memberactivities": memberactivities_date,
+        "raw_data_count_30days": raw_data_count,
+        "guild_members_count": guild_members_count
+    }
 
     return data
