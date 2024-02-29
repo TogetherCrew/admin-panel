@@ -45,7 +45,7 @@ class MongoUtils(MongoBase):
                 },
             )
         elif guild_id:
-            fetched_platform_id = self.get_guild_platform_id(guild_id)
+            fetched_platform_id = self.get_guild_platform_id()
             latest_document = self.get_latest_document(
                 db_name="Saga",
                 collection_name="sagas",

@@ -3,8 +3,10 @@ from datetime import datetime, timedelta
 from utils.mongo_utils import MongoUtils
 
 
-def process_guild_data(platform_document: dict) -> dict[str, str | datetime | None]:
-
+def process_guild_data(platform_document: dict) -> dict[str, str | int | datetime | None]:
+    """
+    process each platform and prepare the analytics for it
+    """
     platform_id = str(platform_document["_id"])
     guild_id = platform_document["metadata"]["id"]
     utils = MongoUtils(guild_id)
