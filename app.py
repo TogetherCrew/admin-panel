@@ -1,14 +1,8 @@
+import logging
 from datetime import datetime
-from pandas.api.types import (
-    is_categorical_dtype,
-    is_datetime64_any_dtype,
-    is_numeric_dtype,
-    is_object_dtype,
-)
+
 import pandas as pd
 import streamlit as st
-import logging
-
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
 
@@ -43,6 +37,6 @@ def load_guilds_latest_date_df():
 logging.basicConfig(level=logging.INFO)
 
 st.subheader("MongoDB data Analytics")
-df = load_guilds_latest_date_df()
+load_guilds_latest_date_df()
 # df = process_df(df)
 # st.dataframe(df, use_container_width=True, hide_index=True)
