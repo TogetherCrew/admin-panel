@@ -3,10 +3,10 @@ from datetime import datetime
 
 import pandas as pd
 import streamlit as st
-from utils.mongo import MongoSingleton
-from utils.process_guild_data import process_guild_data
 from streamlit_authenticator import Authenticate
 import yaml
+from utils.mongo import MongoSingleton
+from utils.process_guild_data import process_guild_data
 from yaml.loader import SafeLoader
 
 
@@ -55,7 +55,7 @@ if authentication_status:
     st.write(f"Welcome *{name}*")
     # st.title('Some content')
     load_guilds_latest_date_df()
-elif authentication_status == False:
+elif authentication_status is False:
     st.error("Username/password is incorrect")
-elif authentication_status == None:
+elif authentication_status is None:
     st.warning("Please enter your username and password")
