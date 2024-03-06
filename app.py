@@ -3,8 +3,8 @@ from datetime import datetime
 
 import pandas as pd
 import streamlit as st
-from streamlit_authenticator import Authenticate
 import yaml
+from streamlit_authenticator import Authenticate
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
 from yaml.loader import SafeLoader
