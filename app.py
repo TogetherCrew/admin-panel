@@ -5,9 +5,11 @@ import pandas as pd
 import streamlit as st
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
+from streamlit_authenticator import Authenticate
+import yaml
+from yaml.loader import SafeLoader
 
 
-# @st.cache_data
 def load_guilds_latest_date_df():
     client = MongoSingleton.get_instance().client
 
@@ -35,8 +37,25 @@ def load_guilds_latest_date_df():
 
 
 logging.basicConfig(level=logging.INFO)
+st.subheader("TogetherCrew's Amin Panel")
+with open("config.yaml") as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
-st.subheader("MongoDB data Analytics")
-load_guilds_latest_date_df()
-# df = process_df(df)
-# st.dataframe(df, use_container_width=True, hide_index=True)
+authenticator = Authenticate(
+    config["credentials"],
+    config["cookie"]["name"],
+    config["cookie"]["key"],
+    config["cookie"]["expiry_days"],
+    config["preauthorized"],
+)
+name, authentication_status, username = authenticator.login()
+
+if authentication_status:
+    authenticator.logout("Logout", "main")
+    st.write(f"Welcome *{name}*")
+    # st.title('Some content')
+    load_guilds_latest_date_df()
+elif authentication_status == False:
+    st.error("Username/password is incorrect")
+elif authentication_status == None:
+    st.warning("Please enter your username and password")
