@@ -1,4 +1,5 @@
 streamlit
+streamlit-authenticator
 numpy
 pandas
 matplotlib
