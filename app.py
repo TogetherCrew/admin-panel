@@ -1,16 +1,44 @@
 import logging
+import os
 from datetime import datetime
 
 import pandas as pd
 import streamlit as st
-import yaml
-from streamlit_authenticator import Authenticate
+from dotenv import load_dotenv
+from streamlit_authenticator import Authenticate, Hasher
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
-from yaml.loader import SafeLoader
 
+logging.basicConfig(level=logging.INFO)
+load_dotenv()
+st.subheader("TogetherCrew's Amin Panel")
+# Get environment variables
+names = os.getenv("NAMES").split(",")
+usernames = os.getenv("USERNAMES").split(",")
+passwords = os.getenv("PASSWORDS").split(",")
+secret_key = os.getenv("SECRET_KEY")
+hashed_passwords = Hasher(passwords).generate()
 
-def load_guilds_latest_date_df():
+# Set up the authenticator
+authenticator = Authenticate(
+    credentials={
+        "usernames": {
+            usernames[i]: {"name": names[i], "password": hashed_passwords[i]}
+            for i in range(len(usernames))
+        }
+    },
+    cookie_name="auth_cookie",
+    key=secret_key,
+    cookie_expiry_days=30,
+)
+
+# Login function
+name, authentication_status, username = authenticator.login()
+
+if authentication_status:
+    authenticator.logout("Logout", "main")
+    st.write(f"Welcome *{name}*")
+
     client = MongoSingleton.get_instance().client
 
     cursor = client["Core"]["platforms"].find({"name": "discord"})
@@ -35,27 +63,7 @@ def load_guilds_latest_date_df():
         df = pd.DataFrame(guilds_data)
         dataframe_widget.dataframe(df)
 
-
-logging.basicConfig(level=logging.INFO)
-st.subheader("TogetherCrew's Amin Panel")
-# with open("config.yaml") as file:
-#     config = yaml.load(file, Loader=SafeLoader)
-
-# authenticator = Authenticate(
-#     config["credentials"],
-#     config["cookie"]["name"],
-#     config["cookie"]["key"],
-#     config["cookie"]["expiry_days"],
-#     config["preauthorized"],
-# )
-# name, authentication_status, username = authenticator.login()
-
-# if authentication_status:
-#     authenticator.logout("Logout", "main")
-#     st.write(f"Welcome *{name}*")
-#     # st.title('Some content')
-load_guilds_latest_date_df()
-# elif authentication_status is False:
-#     st.error("Username/password is incorrect")
-# elif authentication_status is None:
-#     st.warning("Please enter your username and password")
+elif authentication_status is False:
+    st.error("Username/password is incorrect")
+elif authentication_status is None:
+    st.warning("Please enter your username and password")
