@@ -14,7 +14,7 @@ class MongoBase:
 
         raw_data_count = client[self.platform_id][
             "rawmemberactivities"
-        ].count_documents({"createdDate": {"$gte": from_date}})
+        ].count_documents({"date": {"$gte": from_date}})
         return raw_data_count
 
     def get_guild_members_count(self) -> int:
