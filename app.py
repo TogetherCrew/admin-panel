@@ -1,14 +1,13 @@
 import logging
+import os
 from datetime import datetime
 
-import os
-from dotenv import load_dotenv
 import pandas as pd
 import streamlit as st
+from dotenv import load_dotenv
 from streamlit_authenticator import Authenticate, Hasher
 from utils.mongo import MongoSingleton
 from utils.process_guild_data import process_guild_data
-
 
 logging.basicConfig(level=logging.INFO)
 load_dotenv()
