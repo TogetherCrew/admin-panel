@@ -23,14 +23,14 @@ def process_guild_data(
 
     # getting the latest dates
     raw_infos_date = utils.get_latest_discord_raw_info_date()
-    fired_sage_date = utils.get_latest_fired_saga(platform_id=platform_id)
+    # fired_sage_date = utils.get_latest_fired_saga(platform_id=platform_id)
     heatmaps_date = utils.get_latest_heatmaps_date()
     memberactivities_date = utils.get_latest_memberactivities_date()
     extracted_channels = utils.get_distinct_channels()
 
     guild_members_count = utils.get_guild_members_count()
     # 30 days before
-    raw_data_count = utils.get_guild_raw_data_count(
+    raw_data_count = utils.get_raw_data_count(
         from_date=datetime.now() - timedelta(days=31)
     )
 
@@ -43,7 +43,7 @@ def process_guild_data(
         "selected_channels_count": selected_channel_count,
         "extracted_channel_counts": len(extracted_channels),
         "latest_raw_info": raw_infos_date,
-        "latest_analyzer_run_fired_saga": fired_sage_date,
+        # "latest_analyzer_run_fired_saga": fired_sage_date,
         "latest_heatmaps": heatmaps_date,
         "latest_memberactivities": memberactivities_date,
         "raw_data_count_30days": raw_data_count,
