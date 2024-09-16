@@ -11,7 +11,7 @@ def process_guild_data(
     """
     platform_id = str(platform_document["_id"])
     guild_id = platform_document["metadata"]["id"]
-    utils = MongoUtils(guild_id)
+    utils = MongoUtils(platform_id)
 
     guild_name = platform_document["metadata"]["name"]
     connected_at = platform_document["connectedAt"]
